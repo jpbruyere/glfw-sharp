@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Runtime.InteropServices;
 
 namespace Glfw
@@ -133,7 +134,10 @@ namespace Glfw
 
         [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowShouldClose")]
         public static extern void SetWindowShouldClose (IntPtr window, int value);
-    
+
+        [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowTitle")]
+        public static extern void SetWindowTitle (IntPtr window, [MarshalAs (UnmanagedType.LPStr)] string title);
+
         /// <summary>
         /// Creates a Vulkan surface for the specified window.
         /// </summary>
@@ -154,7 +158,7 @@ namespace Glfw
         /// Result.Success if successful, or a Vulkan error code if an error
         /// occurred.
         /// </returns>
-        [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateWindowSurface")]
+        [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateWindowSurface")]
         public static extern int CreateWindowSurface(IntPtr instance, IntPtr window, IntPtr pAllocator, out ulong surface);
 
         /// <summary>

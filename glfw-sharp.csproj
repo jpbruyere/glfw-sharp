@@ -2,9 +2,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard1.3;net35</TargetFrameworks>
     <Version>0.1.0</Version>
-    <RootNamespace>glfw</RootNamespace>
+    <RootNamespace>Glfw</RootNamespace>
     <PackageId>glfw-sharp</PackageId>
     <Authors>FacticiusVir,jpbruyere</Authors>
     <Company />
@@ -16,15 +16,14 @@
     <PackageLicenseUrl>https://github.com/jpbruyere/glfw-sharp/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jpbruyere/glfw-sharp</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>$(SolutionDir)build\$(TargetFramework)\$(Configuration)</OutputPath>
+    <IntermediateOutputPath>$(SolutionDir)build\$(TargetFramework)\obj\$(Configuration)</IntermediateOutputPath>        
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="InstanceExtensions.cs" />
+    <Compile Remove="Monitor.cs" />
+    <Compile Remove="VideoMode.cs" />
   </ItemGroup>
 </Project>
