@@ -1,29 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;net35</TargetFrameworks>
-    <Version>0.1.0</Version>
-    <RootNamespace>Glfw</RootNamespace>
-    <PackageId>glfw-sharp</PackageId>
-    <Authors>FacticiusVir,jpbruyere</Authors>
-    <Company />
-    <Product />
-    <Description>GLFW3 Bindings for C# with Vulkan support</Description>
-    <Copyright>Copyright 2018 Andrew Armstrong/FacticiusVir/jpbruyere</Copyright>
-    <PackageTags>glfw net vulkan 3D</PackageTags>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageLicenseUrl>https://github.com/jpbruyere/glfw-sharp/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/jpbruyere/glfw-sharp</PackageProjectUrl>
-    <PackageIconUrl></PackageIconUrl>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputPath>$(SolutionDir)build\$(TargetFramework)\$(Configuration)</OutputPath>
-    <IntermediateOutputPath>$(SolutionDir)build\$(TargetFramework)\obj\$(Configuration)</IntermediateOutputPath>        
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="InstanceExtensions.cs" />
-    <Compile Remove="Monitor.cs" />
-    <Compile Remove="VideoMode.cs" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<Version>0.2.0</Version>
+		<RootNamespace>Glfw</RootNamespace>
+		<PackageId>glfw-sharp</PackageId>
+		<Authors>FacticiusVir,jpbruyere</Authors>
+		<Company />
+		<Product />
+		<Description>Minimal GLFW3 Bindings for C# with Vulkan support used by vke.net and crow</Description>
+		<Copyright>Copyright 2018 Andrew Armstrong/FacticiusVir/jpbruyere</Copyright>
+		<PackageTags>glfw net vulkan 3D</PackageTags>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageLicenseUrl>https://github.com/jpbruyere/glfw-sharp/blob/master/LICENSE</PackageLicenseUrl>
+		<PackageProjectUrl>https://github.com/jpbruyere/glfw-sharp</PackageProjectUrl>
+		<PackageIconUrl>
+		</PackageIconUrl>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<OutputPath>$(SolutionDir)build\$(TargetFramework)\$(Configuration)</OutputPath>
+		<IntermediateOutputPath>$(SolutionDir)build\$(TargetFramework)\obj\$(Configuration)</IntermediateOutputPath>
+		
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>		
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Compile Include="src/*.cs" />
+	</ItemGroup>
 </Project>
