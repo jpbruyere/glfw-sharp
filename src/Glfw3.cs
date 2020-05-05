@@ -4,6 +4,7 @@
 // This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 using System;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace Glfw {
 	public enum CursorShape
@@ -529,5 +530,25 @@ namespace Glfw {
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetCursor")]
 		public static extern void SetCursor (IntPtr window, IntPtr cursor);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetX11Display")]
+		public static extern IntPtr GetX11Display ();
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetX11Window")]
+		public static extern IntPtr GetX11Window (IntPtr window);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWin32Window")]
+		public static extern IntPtr GetWin32Window (IntPtr window);
+
+
+		[DllImport ("X11", CallingConvention = CallingConvention.Cdecl, EntryPoint = "XDefaultVisual")]
+		public static extern IntPtr GetX11DefaultVisual (IntPtr disp, Int32 screen);
+		[DllImport ("X11", CallingConvention = CallingConvention.Cdecl, EntryPoint = "XDefaultScreen")]
+		public static extern Int32 GetX11DefaultScreen (IntPtr disp);
+
+		[DllImport ("user32.dll", SetLastError = true, EntryPoint = "GetDC")]
+		[SuppressUnmanagedCodeSecurity]
+		public static extern IntPtr GetWin32DC (IntPtr hWnd);
+
 	}
 }
