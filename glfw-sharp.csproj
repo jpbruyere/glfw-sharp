@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>
-		<Version>0.2.0</Version>
+		<Version>0.2.2</Version>
 		<RootNamespace>Glfw</RootNamespace>
 		<PackageId>glfw-sharp</PackageId>
 		<Authors>FacticiusVir,jpbruyere</Authors>
