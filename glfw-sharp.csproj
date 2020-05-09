@@ -1,29 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
-		<Version>0.2.2</Version>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>		
+		
+		<Version>0.2.4</Version>
+		<ReleaseVersion>$(Version)</ReleaseVersion>
+		<PackageVersion>$(Version)</PackageVersion>
+		
 		<RootNamespace>Glfw</RootNamespace>
-		<PackageId>glfw-sharp</PackageId>
+		
+		<Description>Minimal GLFW3 Bindings for C# with Vulkan support used by vke.net and crow</Description>		
+		<PackageTags>glfw net vulkan 3D</PackageTags>
 		<Authors>FacticiusVir,jpbruyere</Authors>
 		<Company />
 		<Product />
-		<Description>Minimal GLFW3 Bindings for C# with Vulkan support used by vke.net and crow</Description>
 		<Copyright>Copyright 2018 Andrew Armstrong/FacticiusVir/jpbruyere</Copyright>
-		<PackageTags>glfw net vulkan 3D</PackageTags>
+		<License>MIT</License>
+		
+		<PackageReleaseNotes>	
+		</PackageReleaseNotes>
+		
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+
 		<PackageLicenseUrl>https://github.com/jpbruyere/glfw-sharp/blob/master/LICENSE</PackageLicenseUrl>
 		<PackageProjectUrl>https://github.com/jpbruyere/glfw-sharp</PackageProjectUrl>
 		<PackageIconUrl>
 		</PackageIconUrl>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<OutputPath>$(SolutionDir)build\$(TargetFramework)\$(Configuration)</OutputPath>
-		<IntermediateOutputPath>$(SolutionDir)build\$(TargetFramework)\obj\$(Configuration)</IntermediateOutputPath>
 		
-		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>		
+		<OutputPath>$(SolutionDir)build\$(Configuration)\</OutputPath>
+		<IntermediateOutputPath>$(SolutionDir)build\$(Configuration)\</IntermediateOutputPath>
+		
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<NoWarn>$(NoWarn);1591</NoWarn>
 	</PropertyGroup>
 	
 	<ItemGroup>
 		<Compile Include="src/*.cs" />
-	</ItemGroup>
+	</ItemGroup>	
 </Project>

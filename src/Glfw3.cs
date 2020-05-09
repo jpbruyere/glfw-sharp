@@ -3,6 +3,7 @@
 //
 // This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 
@@ -21,10 +22,18 @@ namespace Glfw {
 	/// </summary>
 	public static class Glfw3
     {
-        /// <summary>
-        /// The base name for the GLFW3 library.
-        /// </summary>
-        public const string GlfwDll = "glfw";
+		//append "3" to the dll name on windows
+#if NETCORE
+		static Glfw3 () {
+			NativeLibrary.SetDllImportResolver (Assembly.GetExecutingAssembly (),
+				(libraryName, assembly, searchPath) => NativeLibrary.Load (
+					Environment.OSVersion.Platform == PlatformID.Unix ? "glfw" : "glfw3" , assembly, searchPath));
+		}
+#endif
+		/// <summary>
+		/// The base name for the GLFW3 library.
+		/// </summary>
+		public const string GlfwDll = "glfw3";
 
         /// <summary>
         /// Initializes the GLFW library.
