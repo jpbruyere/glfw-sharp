@@ -534,13 +534,18 @@ namespace Glfw {
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateStandardCursor")]
 		public static extern IntPtr CreateStandardCursor (CursorShape shape);
 
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateCursor")]
+		public static extern IntPtr CreateCursor (IntPtr image, int xhot, int yhot);
+
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwDestroyCursor")]
 		public static extern void DestroyCursor (IntPtr cursor);
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetCursor")]
 		public static extern void SetCursor (IntPtr window, IntPtr cursor);
 
+		#region platform native window handle
 
+		#endregion
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetX11Display")]
 		public static extern IntPtr GetX11Display ();
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetX11Window")]
