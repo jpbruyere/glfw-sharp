@@ -9,6 +9,9 @@ namespace test {
 		static void Main () {
 			Glfw3.Init ();
 			Console.WriteLine ($"GLFW3 version: {Glfw3.GetVersion ()}");
+			IntPtr win = Glfw3.CreateWindow (100, 100, "test", MonitorHandle.Zero, IntPtr.Zero);
+			Console.WriteLine ($"ClipBoard content: ${Glfw3.GetClipboardString (win)}");
+			Glfw3.DestroyWindow (win);
 			Glfw3.Terminate ();
 		}
 	}

@@ -79,34 +79,38 @@ namespace Glfw {
         /// binary.
         /// </returns>
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetVersionString")]
-        public static extern NativeString GetVersionString();
+        static unsafe extern NativeUtf8String GetVersionString();
+		public static string VersionString {
+			get => GetVersionString ().ToString ();
+		}
+		
 
-        /// <summary>
-        /// Creates a window and its associated OpenGL or OpenGL ES context.
-        /// Most of the options controlling how the window and its context
-        /// should be created are specified with window hints.
-        /// </summary>
-        /// <param name="width">
-        /// The desired width, in screen coordinates, of the window. This must
-        /// be greater than zero.
-        /// </param>
-        /// <param name="height">
-        /// The desired height, in screen coordinates, of the window. This must
-        /// be greater than zero.
-        /// </param>
-        /// <param name="title">
-        /// The initial window title.
-        /// </param>
-        /// <param name="monitor">
-        /// The monitor to use for full screen mode, or Null for windowed mode.
-        /// </param>
-        /// <param name="share">
-        /// The window whose context to share resources with, or Null to not share resources.
-        /// </param>
-        /// <returns>
-        /// The handle of the created window, or Null if an error occurred.
-        /// </returns>
-        [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateWindow")]
+		/// <summary>
+		/// Creates a window and its associated OpenGL or OpenGL ES context.
+		/// Most of the options controlling how the window and its context
+		/// should be created are specified with window hints.
+		/// </summary>
+		/// <param name="width">
+		/// The desired width, in screen coordinates, of the window. This must
+		/// be greater than zero.
+		/// </param>
+		/// <param name="height">
+		/// The desired height, in screen coordinates, of the window. This must
+		/// be greater than zero.
+		/// </param>
+		/// <param name="title">
+		/// The initial window title.
+		/// </param>
+		/// <param name="monitor">
+		/// The monitor to use for full screen mode, or Null for windowed mode.
+		/// </param>
+		/// <param name="share">
+		/// The window whose context to share resources with, or Null to not share resources.
+		/// </param>
+		/// <returns>
+		/// The handle of the created window, or Null if an error occurred.
+		/// </returns>
+		[DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateWindow")]
         public static extern IntPtr CreateWindow(int width, int height, [MarshalAs(UnmanagedType.LPStr)] string title, MonitorHandle monitor, IntPtr share);
 
         /// <summary>
@@ -141,45 +145,78 @@ namespace Glfw {
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwWindowHint")]
         public static extern void WindowHint(WindowAttribute hint, int value);
 
-        /// <summary>
-        /// Returns the value of the close flag of the specified window.
-        /// </summary>
-        /// <param name="window">
-        /// The window to query.
-        /// </param>
-        /// <returns>
-        /// The value of the close flag.
-        /// </returns>
-        [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwWindowShouldClose")]
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowAttrib")]
+		public static extern int GetWindowAttrib (IntPtr window, WindowAttribute attribute);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowAttrib")]
+		public static extern void SetWindowAttrib (IntPtr window, WindowAttribute attribute, int value);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowPos")]
+		public static extern void GetWindowPos (IntPtr window, out int x, out int y);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowPos")]
+		public static extern void SetWindowPos (IntPtr window, int x, int y);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowSize")]
+		public static extern void GetWindowSize (IntPtr window, out int width, out int height);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowSize")]
+		public static extern void SetWindowSize (IntPtr window, int width, int height);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowOpacity")]
+		public static extern float GetWindowOpacity (IntPtr window);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowOpacity")]
+		public static extern void SetWindowOpacity (IntPtr window, float opacity);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwIconifyWindow")]
+		public static extern void IconifyWindow (IntPtr window);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwRestoreWindow")]
+		public static extern void RestoreWindow (IntPtr window);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwMaximizeWindow")]
+		public static extern void MaximizeWindow (IntPtr window);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwShowWindow")]
+		public static extern void ShowWindow (IntPtr window);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwHideWindow")]
+		public static extern void HideWindow (IntPtr window);
+
+
+		/// <summary>
+		/// Returns the value of the close flag of the specified window.
+		/// </summary>
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <returns>
+		/// The value of the close flag.
+		/// </returns>
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwWindowShouldClose")]
         public static extern bool WindowShouldClose(IntPtr window);
 
         [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowShouldClose")]
         public static extern void SetWindowShouldClose (IntPtr window, int value);
 
-        [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowTitle")]
-        public static extern void SetWindowTitle (IntPtr window, [MarshalAs (UnmanagedType.LPStr)] string title);
-
-        /// <summary>
-        /// Creates a Vulkan surface for the specified window.
-        /// </summary>
-        /// <param name="instance">
-        /// The Vulkan instance to create the surface in.
-        /// </param>
-        /// <param name="window">
-        /// The window to create the surface for.
-        /// </param>
-        /// <param name="pAllocator">
-        /// The allocator to use, or NULL to use the default allocator.
-        /// </param>
-        /// <param name="surface">
-        /// Where to store the handle of the surface. This is set to
-        /// VK_NULL_HANDLE if an error occurred.
-        /// </param>
-        /// <returns>
-        /// Result.Success if successful, or a Vulkan error code if an error
-        /// occurred.
-        /// </returns>
-        [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateWindowSurface")]
+        [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowTitle")]        
+		static extern void SetWindowTitle (IntPtr window, ref byte utf8);
+		public static void SetWindowTitle (IntPtr window, string title)
+			=> SetWindowTitle (window, ref MemoryMarshal.GetReference (new Span<byte> (System.Text.Encoding.UTF8.GetBytes (title + "\0"))));
+		/// <summary>
+		/// Creates a Vulkan surface for the specified window.
+		/// </summary>
+		/// <param name="instance">
+		/// The Vulkan instance to create the surface in.
+		/// </param>
+		/// <param name="window">
+		/// The window to create the surface for.
+		/// </param>
+		/// <param name="pAllocator">
+		/// The allocator to use, or NULL to use the default allocator.
+		/// </param>
+		/// <param name="surface">
+		/// Where to store the handle of the surface. This is set to
+		/// VK_NULL_HANDLE if an error occurred.
+		/// </param>
+		/// <returns>
+		/// Result.Success if successful, or a Vulkan error code if an error
+		/// occurred.
+		/// </returns>
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateWindowSurface")]
         public static extern int CreateWindowSurface(IntPtr instance, IntPtr window, IntPtr pAllocator, out ulong surface);
 
         /// <summary>
@@ -227,20 +264,24 @@ namespace Glfw {
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetErrorCallback")]
         public static extern ErrorDelegate SetErrorCallback(ErrorDelegate callback);
 
-        /// <summary>
-        /// Returns an array of handles for all currently connected monitors.
-        /// The primary monitor is always first in the returned array. If no
-        /// monitors were found, this function returns Null.
-        /// </summary>
-        /// <param name="count">
-        /// Where to store the number of monitors in the returned array. This
-        /// is set to zero if an error occurred.
-        /// </param>
-        /// <returns>
-        /// An array of monitor handles, or Null if no monitors were found or
-        /// if an error occurred.
-        /// </returns>
-        [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetMonitors")]
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowRefreshCallback")]
+		public static extern WindowrefreshDelegate SetWindowRefreshCallback (IntPtr window, WindowrefreshDelegate callback);
+
+
+		/// <summary>
+		/// Returns an array of handles for all currently connected monitors.
+		/// The primary monitor is always first in the returned array. If no
+		/// monitors were found, this function returns Null.
+		/// </summary>
+		/// <param name="count">
+		/// Where to store the number of monitors in the returned array. This
+		/// is set to zero if an error occurred.
+		/// </param>
+		/// <returns>
+		/// An array of monitor handles, or Null if no monitors were found or
+		/// if an error occurred.
+		/// </returns>
+		[DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetMonitors")]
         public static extern IntPtr GetMonitors(out int count);
 
         /// <summary>
@@ -542,6 +583,16 @@ namespace Glfw {
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetCursor")]
 		public static extern void SetCursor (IntPtr window, IntPtr cursor);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetClipboardString")]
+		static extern void SetClipboardString (IntPtr window, ref byte utf8);
+		public static void SetClipboardString (IntPtr window, string cbString)
+			=> SetClipboardString (window, ref MemoryMarshal.GetReference (new Span<byte> (System.Text.Encoding.UTF8.GetBytes (cbString + "\0"))));
+
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetClipboardString")]
+		public static extern NativeUtf8String GetClipboardString (IntPtr window);
 
 		#region platform native window handle
 

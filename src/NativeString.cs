@@ -39,4 +39,19 @@ namespace Glfw
             return Value;
         }
     }
+
+	public struct NativeUtf8String
+	{
+		readonly unsafe byte* handle;
+		public override string ToString ()
+		{
+			unsafe {
+				int size = 0;
+				while (handle[size] != 0)
+					size++;
+				return System.Text.Encoding.UTF8.GetString (handle, size);
+			}
+		}
+		public static implicit operator string(NativeUtf8String utf8) => utf8.ToString();
+	}
 }

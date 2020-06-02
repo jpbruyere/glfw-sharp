@@ -108,20 +108,21 @@ namespace Glfw {
     /// The scroll offset along the y-axis.
     /// </param>
     public delegate void ScrollDelegate (IntPtr window, double xOffset, double yOffset);
-    /// <summary>
-    /// The function signature for window size callback functions.
-    /// </summary>
-    /// <param name="window">
-    /// The window that was resized.
-    /// </param>
-    /// <param name="width">
-    /// The new width, in screen coordinates, of the window.
-    /// </param>
-    /// <param name="height">
-    /// The new height, in screen coordinates, of the window.
-    /// </param>
-    [UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-    public delegate void WindowSizeDelegate (IntPtr window, int width, int height);
-
+	/// <summary>
+	/// The function signature for window size callback functions.
+	/// </summary>
+	/// <param name="window">
+	/// The window that was resized.
+	/// </param>
+	/// <param name="width">
+	/// The new width, in screen coordinates, of the window.
+	/// </param>
+	/// <param name="height">
+	/// The new height, in screen coordinates, of the window.
+	/// </param>
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	public delegate void WindowSizeDelegate (IntPtr window, int width, int height);
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	public delegate void WindowrefreshDelegate (IntPtr window);
 }
 
