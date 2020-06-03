@@ -7,6 +7,10 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 
+using GLFWwindow = System.IntPtr;
+using GLFWmonitor = System.IntPtr;
+using GLFWgammaramp = System.IntPtr;
+
 namespace Glfw {
 	public enum CursorShape
 	{
@@ -17,6 +21,28 @@ namespace Glfw {
 		HResize		= 0x00036005,
 		VResize		= 0x00036006
 	}
+	public enum JoystickEvent {
+		Connected 		= 0x00040001,
+		Disconnected 	= 0x00040002
+	}
+	public struct GamepadStatePtr {
+		readonly unsafe byte* handle;
+		public InputAction[] Buttons {
+			get {
+				unsafe {
+					return new Span<InputAction> (handle, 15 * sizeof(int)).ToArray ();
+				}
+			}
+		}
+		public float[] axes {
+			get {
+				unsafe {
+					return new Span<float> (handle + sizeof(int) * 15, 6).ToArray ();
+				}
+			}
+		}
+	}
+
 	/// <summary>
 	/// Interop functions for the GLFW3 API.
 	/// </summary>
@@ -111,7 +137,7 @@ namespace Glfw {
 		/// The handle of the created window, or Null if an error occurred.
 		/// </returns>
 		[DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateWindow")]
-        public static extern IntPtr CreateWindow(int width, int height, [MarshalAs(UnmanagedType.LPStr)] string title, MonitorHandle monitor, IntPtr share);
+        public static extern GLFWwindow CreateWindow(int width, int height, [MarshalAs(UnmanagedType.LPStr)] string title, MonitorHandle monitor, IntPtr share);
 
         /// <summary>
         /// Destroys the specified window and its context. On calling this
@@ -121,7 +147,7 @@ namespace Glfw {
         /// The window to destroy.
         /// </param>
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwDestroyWindow")]
-        public static extern void DestroyWindow(IntPtr window);
+        public static extern void DestroyWindow(GLFWwindow window);
 
         /// <summary>
         /// Processes events in the event queue and then returns immediately.
@@ -146,35 +172,35 @@ namespace Glfw {
         public static extern void WindowHint(WindowAttribute hint, int value);
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowAttrib")]
-		public static extern int GetWindowAttrib (IntPtr window, WindowAttribute attribute);
+		public static extern int GetWindowAttrib (GLFWwindow window, WindowAttribute attribute);
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowAttrib")]
-		public static extern void SetWindowAttrib (IntPtr window, WindowAttribute attribute, int value);
+		public static extern void SetWindowAttrib (GLFWwindow window, WindowAttribute attribute, int value);
 
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowPos")]
-		public static extern void GetWindowPos (IntPtr window, out int x, out int y);
+		public static extern void GetWindowPos (GLFWwindow window, out int x, out int y);
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowPos")]
-		public static extern void SetWindowPos (IntPtr window, int x, int y);
+		public static extern void SetWindowPos (GLFWwindow window, int x, int y);
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowSize")]
-		public static extern void GetWindowSize (IntPtr window, out int width, out int height);
+		public static extern void GetWindowSize (GLFWwindow window, out int width, out int height);
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowSize")]
-		public static extern void SetWindowSize (IntPtr window, int width, int height);
+		public static extern void SetWindowSize (GLFWwindow window, int width, int height);
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowOpacity")]
-		public static extern float GetWindowOpacity (IntPtr window);
+		public static extern float GetWindowOpacity (GLFWwindow window);
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowOpacity")]
-		public static extern void SetWindowOpacity (IntPtr window, float opacity);
+		public static extern void SetWindowOpacity (GLFWwindow window, float opacity);
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwIconifyWindow")]
-		public static extern void IconifyWindow (IntPtr window);
+		public static extern void IconifyWindow (GLFWwindow window);
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwRestoreWindow")]
-		public static extern void RestoreWindow (IntPtr window);
+		public static extern void RestoreWindow (GLFWwindow window);
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwMaximizeWindow")]
-		public static extern void MaximizeWindow (IntPtr window);
+		public static extern void MaximizeWindow (GLFWwindow window);
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwShowWindow")]
-		public static extern void ShowWindow (IntPtr window);
+		public static extern void ShowWindow (GLFWwindow window);
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwHideWindow")]
-		public static extern void HideWindow (IntPtr window);
+		public static extern void HideWindow (GLFWwindow window);
 
 
 		/// <summary>
@@ -187,14 +213,14 @@ namespace Glfw {
 		/// The value of the close flag.
 		/// </returns>
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwWindowShouldClose")]
-        public static extern bool WindowShouldClose(IntPtr window);
+        public static extern bool WindowShouldClose(GLFWwindow window);
 
         [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowShouldClose")]
-        public static extern void SetWindowShouldClose (IntPtr window, int value);
+        public static extern void SetWindowShouldClose (GLFWwindow window, int value);
 
         [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowTitle")]        
-		static extern void SetWindowTitle (IntPtr window, ref byte utf8);
-		public static void SetWindowTitle (IntPtr window, string title)
+		static extern void SetWindowTitle (GLFWwindow window, ref byte utf8);
+		public static void SetWindowTitle (GLFWwindow window, string title)
 			=> SetWindowTitle (window, ref MemoryMarshal.GetReference (new Span<byte> (System.Text.Encoding.UTF8.GetBytes (title + "\0"))));
 		/// <summary>
 		/// Creates a Vulkan surface for the specified window.
@@ -249,7 +275,7 @@ namespace Glfw {
         /// </param>
         /// <returns></returns>
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowSizeCallback")]
-        public static extern WindowSizeDelegate SetWindowSizeCallback(IntPtr window, WindowSizeDelegate callback);
+        public static extern WindowSizeDelegate SetWindowSizeCallback(GLFWwindow window, WindowSizeDelegate callback);
 
         /// <summary>
         /// Sets the error callback, which is called with an error code and a
@@ -265,7 +291,7 @@ namespace Glfw {
         public static extern ErrorDelegate SetErrorCallback(ErrorDelegate callback);
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowRefreshCallback")]
-		public static extern WindowrefreshDelegate SetWindowRefreshCallback (IntPtr window, WindowrefreshDelegate callback);
+		public static extern WindowDelegate SetWindowRefreshCallback (GLFWwindow window, WindowDelegate callback);
 
 
 		/// <summary>
@@ -405,10 +431,10 @@ namespace Glfw {
         public static extern void SetGamma(MonitorHandle monitor, float gamma);
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetInputMode")]
-        public static extern int GetInputMode(IntPtr window, int mode);
+        public static extern int GetInputMode(GLFWwindow window, int mode);
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetInputMode")]
-        public static extern void SetInputMode(IntPtr window, int mode, int value);
+        public static extern void SetInputMode(GLFWwindow window, int mode, int value);
 
         /// <summary>
         /// Returns the localized name of the specified printable key. This is
@@ -424,25 +450,25 @@ namespace Glfw {
         /// The localized name of the key, or Null.
         /// </returns>
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetKeyName")]
-        public static extern NativeString GetKeyName(Key key, int scancode);
+        public static extern NativeUtf8String GetKeyName(Key key, int scancode);
         
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetKey")]
-        public static extern InputAction GetKey(IntPtr window, Key key);
+        public static extern InputAction GetKey(GLFWwindow window, Key key);
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetMouseButton")]
-        public static extern InputAction GetMouseButton(IntPtr window, MouseButton button);
+        public static extern InputAction GetMouseButton(GLFWwindow window, MouseButton button);
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetCursorPos")]
-        public static extern void GetCursorPosition(IntPtr window, out double xPosition, out double yPosition);
+        public static extern void GetCursorPosition(GLFWwindow window, out double xPosition, out double yPosition);
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetCursorPos")]
-        public static extern void SetCursorPosition(IntPtr window, double xPosition, double yPosition);
+        public static extern void SetCursorPosition(GLFWwindow window, double xPosition, double yPosition);
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetKeyCallback")]
-        public static extern KeyDelegate SetKeyCallback(IntPtr window, KeyDelegate callback);
+        public static extern KeyDelegate SetKeyCallback(GLFWwindow window, KeyDelegate callback);
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetCharCallback")]
-        public static extern KeyDelegate SetCharCallback(IntPtr window, CharDelegate callback);
+        public static extern KeyDelegate SetCharCallback(GLFWwindow window, CharDelegate callback);
 
         /// <summary>
         /// <para>Sets a callback for Mouse movement events. Use this for full
@@ -457,7 +483,7 @@ namespace Glfw {
         /// library had not been initialized.
         /// </returns>
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetCursorPosCallback")]
-        public static extern CursorPosDelegate SetCursorPosCallback(IntPtr window, CursorPosDelegate callback);
+        public static extern CursorPosDelegate SetCursorPosCallback(GLFWwindow window, CursorPosDelegate callback);
 
         /// <summary>
         /// <para>Sets a Callback for Button Events (i.e. clicks). This also
@@ -475,7 +501,7 @@ namespace Glfw {
         /// library had not been initialized.
         /// </returns>
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetMouseButtonCallback")]
-        public static extern MouseButtonDelegate SetMouseButtonPosCallback(IntPtr window, MouseButtonDelegate callback);
+        public static extern MouseButtonDelegate SetMouseButtonPosCallback(GLFWwindow window, MouseButtonDelegate callback);
 
         /// <summary>
         /// Sets a Callback for Mouse Scrolling Events. (i.e. scroll wheel)
@@ -487,7 +513,7 @@ namespace Glfw {
         /// library had not been initialized.
         /// </returns>
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetScrollCallback")]
-        public static extern ScrollDelegate SetScrollCallback(IntPtr window, ScrollDelegate callback);
+        public static extern ScrollDelegate SetScrollCallback(GLFWwindow window, ScrollDelegate callback);
 
         /// <summary>
         /// Returns an array of names of Vulkan instance extensions required by
@@ -582,28 +608,238 @@ namespace Glfw {
 		public static extern void DestroyCursor (IntPtr cursor);
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetCursor")]
-		public static extern void SetCursor (IntPtr window, IntPtr cursor);
+		public static extern void SetCursor (GLFWwindow window, IntPtr cursor);
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetClipboardString")]
-		static extern void SetClipboardString (IntPtr window, ref byte utf8);
-		public static void SetClipboardString (IntPtr window, string cbString)
+		static extern void SetClipboardString (GLFWwindow window, ref byte utf8);
+		public static void SetClipboardString (GLFWwindow window, string cbString)
 			=> SetClipboardString (window, ref MemoryMarshal.GetReference (new Span<byte> (System.Text.Encoding.UTF8.GetBytes (cbString + "\0"))));
 
 
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetClipboardString")]
-		public static extern NativeUtf8String GetClipboardString (IntPtr window);
+		public static extern NativeUtf8String GetClipboardString (GLFWwindow window);
 
 		#region platform native window handle
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwInitHint")]
+		public static extern void InitHint (int a, int b);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetError")]
+		public static extern int GetError (out NativeUtf8String utf8String);
+
+
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetMonitorWorkarea")]
+		public static extern void GetMonitorWorkarea (GLFWmonitor monitor, out int x, out int y, out int width, out int height);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetMonitorContentScale")]
+		public static extern void GetMonitorContentScale (GLFWmonitor monitor, out float xscale, out float yscale);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetMonitorUserPointer")]
+		public static extern void SetMonitorUserPointer (GLFWmonitor monitor, IntPtr userPointer);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetMonitorUserPointer")]
+		public static extern IntPtr GetMonitorUserPointer (GLFWmonitor monitor);
+
+
+
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetGammaRamp")]
+		public static extern GLFWgammaramp GetGammaRamp (GLFWmonitor monitor);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetGammaRamp")]
+		public static extern void SetGammaRamp (GLFWmonitor monitor, GLFWgammaramp gammaramp);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwDefaultWindowHints")]
+		public static extern void DefaultWindowHints ();
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwWindowHintString")]
+		public static extern void WindowHintString (WindowAttribute hint, ref byte value);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowIcon")]
+		public static extern void SetWindowIcon (GLFWwindow window, int count, ref Image image);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowSizeLimits")]
+		public static extern void SetWindowSizeLimits (GLFWwindow window, int minW, int minH, int maxW, int maxH);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowAspectRatio")]
+		public static extern void SetWindowAspectRatio (GLFWwindow window, int numerator, int denominator);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetFramebufferSize")]
+		public static extern void GetFramebufferSize (GLFWwindow window, out int width, out int height);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowFrameSize")]
+		public static extern void GetWindowFrameSize (GLFWwindow window, out int left, out int top, out int width, out int height);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowContentScale")]
+		public static extern void GetWindowContentScale (GLFWwindow window, out float scalex, out float scaly);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwFocusWindow")]
+		public static extern void FocusWindow (GLFWwindow window);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwRequestWindowAttention")]
+		public static extern void RequestWindowAttention (GLFWwindow window);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowMonitor")]
+		public static extern GLFWmonitor GetWindowMonitor (GLFWwindow window);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowMonitor")]
+		public static extern void SetWindowMonitor (GLFWwindow window, GLFWmonitor monitor,int x, int y, int width, int height, int refreshRate);
+
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowUserPointer")]
+		public static extern void SetWindowUserPointer (GLFWwindow window, IntPtr userPointer);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWindowUserPointer")]
+		public static extern IntPtr GetWindowUserPointer (GLFWwindow window);
+
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowCloseCallback")]
+		public static extern WindowDelegate SetWindowCloseCallback (GLFWwindow window, WindowDelegate winDel);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowFocusCallback")]
+		public static extern WindowBooleanDelegate SetWindowFocusCallback (GLFWwindow window, WindowBooleanDelegate winDel);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowIconifyCallback")]
+		public static extern WindowBooleanDelegate SetWindowIconifyCallback (GLFWwindow window, WindowBooleanDelegate winDel);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowMaximizeCallback")]
+		public static extern WindowBooleanDelegate SetWindowMaximizeCallback (GLFWwindow window, WindowBooleanDelegate winDel);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetFramebufferSizeCallback")]
+		public static extern WindowSizeDelegate SetFramebufferSizeCallback (GLFWwindow window, WindowSizeDelegate winDel);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowContentScaleCallback")]
+		public static extern WindowScaleDelegate SetWindowContentScaleCallback (GLFWwindow window, WindowScaleDelegate winDel);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwWaitEvents")]
+		public static extern void WaitEvents ();
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwWaitEventsTimeout")]
+		public static extern void WaitEventsTimeout (double timeOut);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwPostEmptyEvent")]
+		public static extern void PostEmptyEvent ();
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwRawMouseMotionSupported")]
+		public static extern bool RawMouseMotionSupported ();
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetKeyScancode")]
+		public static extern int GetKeyScancode (Key key);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetCharModsCallback")]
+		public static extern CharModsDelegate SetCharModsCallback (GLFWwindow window, CharModsDelegate del);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetCursorEnterCallback")]
+		public static extern WindowBooleanDelegate SetCursorEnterCallback (GLFWwindow window, WindowBooleanDelegate del);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetDropCallback")]
+		public static extern WindowDropDelegate SetDropCallback (GLFWwindow window, WindowDropDelegate del);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwJoystickPresent")]
+		public static extern bool JoystickPresent (int joystickID);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetJoystickAxes")]
+		public static extern IntPtr GetJoystickAxes (int joystickID, out int count);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetJoystickButtons")]
+		public static extern IntPtr GetJoystickButtons (int joystickID, out int count);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetJoystickHats")]
+		public static extern IntPtr GetJoystickHats (int joystickID, out int count);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetJoystickName")]
+		public static extern NativeUtf8String GetJoystickName (int joystickID);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetJoystickGUID")]
+		public static extern NativeUtf8String GetJoystickGUID (int joystickID);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetJoystickUserPointer")]
+		public static extern void SetJoystickUserPointer (int joystickID, IntPtr userPtr);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetJoystickUserPointer")]
+		public static extern IntPtr GetJoystickUserPointer (int joystickID);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwJoystickIsGamepad")]
+		public static extern int JoystickIsGamepad (int joystickID);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetJoystickCallback")]
+		public static extern JoystickDelegate SetJoystickCallback (JoystickDelegate del);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwUpdateGamepadMappings")]
+		public static extern bool UpdateGamepadMappings (NativeUtf8String mapping);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetGamepadName")]
+		public static extern NativeUtf8String GetGamepadName (int gamepadID);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetGamepadState")]
+		public static extern bool GetGamepadState (int gamepadID, GamepadStatePtr gamepadState);
+
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetTime")]
+		public static extern double GetTime ();
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetTime")]
+		public static extern void SetTime (double time);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetTimerValue")]
+		public static extern UInt64 GetTimerValue ();
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetTimerFrequency")]
+		public static extern UInt64 GetTimerFrequency ();
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwMakeContextCurrent")]
+		public static extern void MakeContextCurrent (GLFWwindow window);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetCurrentContext")]
+		public static extern GLFWwindow GetCurrentContext ();
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSwapBuffers")]
+		public static extern void SwapBuffers (GLFWwindow window);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSwapInterval")]
+		public static extern void SwapInterval (int interval);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwExtensionSupported")]
+		public static extern int ExtensionSupported (NativeString extname);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetProcAddress")]
+		public static extern IntPtr GetProcAddress (NativeString procName);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwVulkanSupported")]
+		public static extern bool VulkanSupported ();
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetRequiredInstanceExtensions")]
+		public static extern IntPtr GetRequiredInstanceExtensions (out UInt32 count);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetInstanceProcAddress")]
+		public static extern IntPtr GetInstanceProcAddress (IntPtr vkInstance, NativeString procName);
+
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetPhysicalDevicePresentationSupport")]
+		public static extern bool GetPhysicalDevicePresentationSupport (IntPtr instance, IntPtr phy, UInt32 queuefamily);
 
 		#endregion
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetX11Display")]
 		public static extern IntPtr GetX11Display ();
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetX11Window")]
-		public static extern IntPtr GetX11Window (IntPtr window);
+		public static extern IntPtr GetX11Window (GLFWwindow window);
 
 		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetWin32Window")]
-		public static extern IntPtr GetWin32Window (IntPtr window);
+		public static extern IntPtr GetWin32Window (GLFWwindow window);
 
 
 		[DllImport ("X11", CallingConvention = CallingConvention.Cdecl, EntryPoint = "XDefaultVisual")]

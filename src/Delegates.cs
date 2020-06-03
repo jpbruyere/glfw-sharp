@@ -4,6 +4,7 @@
 // This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)using System;
 using System;
 using System.Runtime.InteropServices;
+using GLFWwindow = System.IntPtr;
 
 namespace Glfw {
     /// <summary>
@@ -24,7 +25,7 @@ namespace Glfw {
     /// <param name="modifiers">
     /// Bit field describing which modifier keys were held down.
     /// </param>
-    public delegate void KeyDelegate (IntPtr window, Key key, int scanCode, InputAction action, Modifier modifiers);
+    public delegate void KeyDelegate (GLFWwindow window, Key key, int scanCode, InputAction action, Modifier modifiers);
     /// <summary>
     /// A delegate representing character events on a WindowHandle.
     /// </summary>
@@ -123,6 +124,14 @@ namespace Glfw {
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 	public delegate void WindowSizeDelegate (IntPtr window, int width, int height);
 	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-	public delegate void WindowrefreshDelegate (IntPtr window);
+	public delegate void WindowScaleDelegate (IntPtr window, float xscale, float yscale);
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	public delegate void WindowDelegate (IntPtr window);
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	public delegate void WindowBooleanDelegate (IntPtr window, bool state);
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	public delegate void WindowDropDelegate (IntPtr window, int pathCount, out IntPtr pathes);
+	[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+	public delegate void JoystickDelegate (int joystickId, JoystickEvent evt);
 }
 
