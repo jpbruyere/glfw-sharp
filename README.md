@@ -5,10 +5,10 @@
     <img src="https://buildstats.info/nuget/glfw-sharp">
   </a>
   <a href="https://travis-ci.org/jpbruyere/glfw-sharp">
-    <img src="https://travis-ci.org/jpbruyere/glfw-sharp.svg?branch=master">
+    <img src="https://img.shields.io/travis/jpbruyere/glfw-sharp.svg?&logo=travis&logoColor=white">
   </a>
   <a href="https://ci.appveyor.com/project/jpbruyere/glfw-sharp">
-    <img src="https://ci.appveyor.com/api/projects/status/fdwb4e3ru7y8v3sp/branch/master?svg=true">
+    <img src="https://img.shields.io/appveyor/ci/jpbruyere/glfw-sharp?logo=appveyor&logoColor=lightgrey">
   </a>  
   <img src="https://img.shields.io/github/license/jpbruyere/glfw-sharp.svg?style=flat-square">
   <a href="https://www.paypal.me/GrandTetraSoftware">
