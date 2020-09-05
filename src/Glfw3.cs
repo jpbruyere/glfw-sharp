@@ -3,7 +3,6 @@
 //
 // This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 
@@ -48,14 +47,6 @@ namespace Glfw {
 	/// </summary>
 	public static class Glfw3
     {
-		//append "3" to the dll name on windows
-#if NETCORE
-		static Glfw3 () {
-			NativeLibrary.SetDllImportResolver (Assembly.GetExecutingAssembly (),
-				(libraryName, assembly, searchPath) => NativeLibrary.Load (
-					Environment.OSVersion.Platform == PlatformID.Unix ? "glfw" : "glfw3" , assembly, searchPath));
-		}
-#endif
 		/// <summary>
 		/// The base name for the GLFW3 library.
 		/// </summary>
@@ -850,6 +841,14 @@ namespace Glfw {
 		[DllImport ("user32.dll", SetLastError = true, EntryPoint = "GetDC")]
 		[SuppressUnmanagedCodeSecurity]
 		public static extern IntPtr GetWin32DC (IntPtr hWnd);
+
+		//Egl
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetEGLDisplay")]
+		public static extern IntPtr GetEGLDisplay ();
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetEGLContext")]
+		public static extern IntPtr GetEGLContext (IntPtr window);
+		[DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetEGLSurface")]
+		public static extern IntPtr GetEGLSurface (IntPtr window);
 
 	}
 }
