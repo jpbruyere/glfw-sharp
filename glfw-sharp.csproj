@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>		
 		
-		<Version>0.2.9</Version>
+		<Version>0.2.10</Version>
 		<PackageVersion>$(Version)-beta</PackageVersion>
 		
 		<RootNamespace>Glfw</RootNamespace>
@@ -42,12 +42,10 @@
 	
 	<ItemGroup>
 		<Compile Include="src/*.cs" />
-		<Content Include="glfw-sharp.targets">
-			<Pack>true</Pack>
-			<IncludeInPackage>true</IncludeInPackage>
-			<PackagePath>build\</PackagePath>
-		</Content>
-		<None Include="glfw-sharp.dll.config" Pack="true" PackagePath="content" />
+		<None Include="glfw-sharp.targets" Pack="true" PackagePath="build"/>
+		<None Include="glfw-sharp.dll.config" Pack="true" PackagePath="content" >
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		
-	</ItemGroup>	
+	</ItemGroup>
 </Project>
