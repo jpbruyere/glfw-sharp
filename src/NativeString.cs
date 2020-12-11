@@ -46,6 +46,8 @@ namespace Glfw
 		public override string ToString ()
 		{
 			unsafe {
+				if ((int)handle == 0)
+					return null;
 				int size = 0;
 				while (handle[size] != 0)
 					size++;

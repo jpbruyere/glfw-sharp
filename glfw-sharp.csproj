@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>		
 		
-		<Version>0.2.10</Version>
+		<Version>0.2.11</Version>
 		<PackageVersion>$(Version)-beta</PackageVersion>
 		
 		<RootNamespace>Glfw</RootNamespace>
