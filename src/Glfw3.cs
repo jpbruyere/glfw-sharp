@@ -18,9 +18,13 @@ namespace Glfw {
 		Crosshair	= 0x00036003,
 		Hand		= 0x00036004,
 		HResize		= 0x00036005,
-		VResize		= 0x00036006
-	}
-	public enum JoystickEvent {
+		VResize		= 0x00036006,
+        NWSEResize  = 0x00036007,
+        NESWResize  = 0x00036008,
+        ResizeAll   = 0x00036009,
+        NotAllowed  = 0x0003600A
+    }
+    public enum JoystickEvent {
 		Connected 		= 0x00040001,
 		Disconnected 	= 0x00040002
 	}
