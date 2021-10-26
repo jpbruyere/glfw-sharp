@@ -1,24 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>		
-		
-		<Version>0.2.12</Version>
-		<PackageVersion>$(Version)-beta</PackageVersion>
-		
+		<TargetFramework>netcoreapp3.0</TargetFramework>
+
+		<Version>0.2.14</Version>
+		<PackageVersion>$(Version)</PackageVersion>
+
 		<RootNamespace>Glfw</RootNamespace>
-		
-		<Description>Minimal GLFW3 Bindings for C# with Vulkan support used by vke.net and crow</Description>		
+
+		<Description>Minimal GLFW3 Bindings for C# with Vulkan support used by vke.net and crow</Description>
 		<PackageTags>glfw net vulkan 3D</PackageTags>
 		<Authors>FacticiusVir,jpbruyere</Authors>
 		<Company />
 		<Product />
 		<Copyright>Copyright 2018 Andrew Armstrong/FacticiusVir/jpbruyere</Copyright>
 		<License>MIT</License>
-		
-		<PackageReleaseNotes>	
+
+		<PackageReleaseNotes>
+		Move from `netstandard2.0` to `netcoreapp3.0` to use LoadContext for
+		native dll's resolution.
 		</PackageReleaseNotes>
-		
+
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
@@ -27,25 +29,25 @@
 		<PackageIconUrl>
 		</PackageIconUrl>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		
+
 		<OutputPath>$(SolutionDir)build\$(Configuration)\</OutputPath>
 		<IntermediateOutputPath>$(SolutionDir)build\$(Configuration)\</IntermediateOutputPath>
-		
+
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 		<EnableDefaultNoneItems>false</EnableDefaultNoneItems>
-		<NoWarn>$(NoWarn);1591</NoWarn>		
+		<NoWarn>$(NoWarn);1591</NoWarn>
 	</PropertyGroup>
-	
+
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 		<PackageReference Include="System.Memory" Version="4.5.4" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<Compile Include="src/*.cs" />
 		<None Include="glfw-sharp.targets" Pack="true" PackagePath="build"/>
 		<None Include="glfw-sharp.dll.config" Pack="true" PackagePath="content" >
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		
+
 	</ItemGroup>
 </Project>

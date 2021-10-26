@@ -9,6 +9,7 @@ using System.Security;
 using GLFWwindow = System.IntPtr;
 using GLFWmonitor = System.IntPtr;
 using GLFWgammaramp = System.IntPtr;
+using System.Reflection;
 
 namespace Glfw {
 	public enum CursorShape
@@ -51,6 +52,21 @@ namespace Glfw {
 	/// </summary>
 	public static class Glfw3
     {
+		static IntPtr resolveUnmanaged(Assembly assembly, String libraryName)
+		{
+
+			switch (libraryName)
+			{
+				case "glfw3":
+					return NativeLibrary.Load("glfw", assembly, null);
+			}
+			Console.WriteLine($"[UNRESOLVE] {assembly} {libraryName}");
+			return IntPtr.Zero;
+		}
+        static Glfw3 () {
+            System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(
+                Assembly.GetExecutingAssembly()).ResolvingUnmanagedDll += resolveUnmanaged;
+        }
 		/// <summary>
 		/// The base name for the GLFW3 library.
 		/// </summary>
@@ -104,7 +120,7 @@ namespace Glfw {
 		public static string VersionString {
 			get => GetVersionString ().ToString ();
 		}
-		
+
 
 		/// <summary>
 		/// Creates a window and its associated OpenGL or OpenGL ES context.
@@ -213,7 +229,7 @@ namespace Glfw {
         [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowShouldClose")]
         public static extern void SetWindowShouldClose (GLFWwindow window, int value);
 
-        [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowTitle")]        
+        [DllImport (GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetWindowTitle")]
 		static extern void SetWindowTitle (GLFWwindow window, ref byte utf8);
 		public static void SetWindowTitle (GLFWwindow window, string title)
 			=> SetWindowTitle (window, ref MemoryMarshal.GetReference (new Span<byte> (System.Text.Encoding.UTF8.GetBytes (title + "\0"))));
@@ -426,10 +442,10 @@ namespace Glfw {
         public static extern void SetGamma(MonitorHandle monitor, float gamma);
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetInputMode")]
-        public static extern int GetInputMode(GLFWwindow window, int mode);
+        public static extern int GetInputMode(GLFWwindow window, InputMode mode);
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwSetInputMode")]
-        public static extern void SetInputMode(GLFWwindow window, int mode, int value);
+        public static extern void SetInputMode(GLFWwindow window, InputMode mode, int value);
 
         /// <summary>
         /// Returns the localized name of the specified printable key. This is
@@ -446,7 +462,7 @@ namespace Glfw {
         /// </returns>
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetKeyName")]
         public static extern NativeUtf8String GetKeyName(Key key, int scancode);
-        
+
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetKey")]
         public static extern InputAction GetKey(GLFWwindow window, Key key);
 
@@ -550,8 +566,8 @@ namespace Glfw {
 
             var result = new MonitorHandle[count];
 
-            for (int i = 0; i < count; i++)            
-                result[i] = new MonitorHandle(Marshal.ReadIntPtr(monitors, i));            
+            for (int i = 0; i < count; i++)
+                result[i] = new MonitorHandle(Marshal.ReadIntPtr(monitors, i));
 
             return result;
         }
@@ -574,8 +590,8 @@ namespace Glfw {
 
             var result = new VideoMode[count];
 
-            for (int i = 0; i < count; i++)            
-                result[i] = Marshal.PtrToStructure<VideoMode>(Marshal.ReadIntPtr(videoModes, i));            
+            for (int i = 0; i < count; i++)
+                result[i] = Marshal.PtrToStructure<VideoMode>(Marshal.ReadIntPtr(videoModes, i));
 
             return result;
         }

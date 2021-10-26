@@ -10,7 +10,7 @@ namespace Glfw {
 	public class Window : IDisposable {
 
 		/** GLFW callback may return a custom pointer, this list makes the link between the GLFW window pointer and the
-			manage VkWindow instance. */		
+			manage VkWindow instance. */
 		static Dictionary<IntPtr,Window> windows = new Dictionary<IntPtr, Window>();
 		/** GLFW window native pointer. */
 		IntPtr hWin;
@@ -134,7 +134,7 @@ namespace Glfw {
 			windows[window].lastMouseY = yPosition;
 		};
 		static MouseButtonDelegate HandleMouseButtonDelegate = (IntPtr window, Glfw.MouseButton button, InputAction action, Modifier mods) => {
-			if (action == InputAction.Press) 
+			if (action == InputAction.Press)
 				windows[window].onMouseButtonDown (button);
 			 else
 				windows[window].onMouseButtonUp (button);
@@ -144,7 +144,7 @@ namespace Glfw {
 		};
 		static KeyDelegate HandleKeyDelegate = (IntPtr window, Key key, int scanCode, InputAction action, Modifier modifiers) => {
 			windows[window].KeyModifiers = modifiers;
-			if (action == InputAction.Press || action == InputAction.Repeat) 
+			if (action == InputAction.Press || action == InputAction.Repeat)
 				windows[window].onKeyDown (key, scanCode, modifiers);
 			else
 				windows[window].onKeyUp (key, scanCode, modifiers);
