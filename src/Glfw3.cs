@@ -52,6 +52,7 @@ namespace Glfw {
 	/// </summary>
 	public static class Glfw3
     {
+        #if !NET48
 		static IntPtr resolveUnmanaged(Assembly assembly, String libraryName)
 		{
 
@@ -67,6 +68,7 @@ namespace Glfw {
             System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(
                 Assembly.GetExecutingAssembly()).ResolvingUnmanagedDll += resolveUnmanaged;
         }
+        #endif
 		/// <summary>
 		/// The base name for the GLFW3 library.
 		/// </summary>
