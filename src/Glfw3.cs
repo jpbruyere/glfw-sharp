@@ -461,7 +461,9 @@ namespace Glfw {
         /// The localized name of the key, or Null.
         /// </returns>
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetKeyName")]
-        public static extern NativeUtf8String GetKeyName(Key key, int scancode);
+        static extern NativeUtf8String getKeyName(Key key, int scancode);
+        public static string GetKeyName(Key key, int scancode = 0)
+            => getKeyName (key, scancode).ToString();
 
         [DllImport(GlfwDll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetKey")]
         public static extern InputAction GetKey(GLFWwindow window, Key key);
